@@ -19,6 +19,8 @@ public class PrimeServiceImpl extends PrimeServiceImplBase {
 
     int[] factors = PrimeFactorCalculator.primeFactors(n);
 
+    //ideally - we could send a prime factor as soon as we've found one.
+
     for(int i=0;i<factors.length;i++){
       PrimeFactorsResponse response = PrimeFactorsResponse.newBuilder()
           .setFactor(factors[i])
