@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package prime; //this is proto package
+
+option java_package = "com.proto.prime";
+option java_multiple_files = true;
+
+message PrimeFactorsRequest {
+  int32 input = 1;
+}
+
+message PrimeFactorsResponse {
+  int32 factor = 1;
+}
+
+
+service PrimeService {
+
+  //Streaming Response
+  rpc PrimeFactors(PrimeFactorsRequest) returns  (stream PrimeFactorsResponse) {};
+}
