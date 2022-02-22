@@ -6,6 +6,7 @@ import com.proto.calculator.ComputeAverageResponse;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
@@ -22,13 +23,12 @@ public class ComputeAverageClient {
 
     CountDownLatch latch = new CountDownLatch(1);
 
-    int[] values = {1,2,3,4};
 
     StreamObserver<ComputeAverageRequest> requestObserver = calcClient.computeAverage(
         new StreamObserver<ComputeAverageResponse>() {
           @Override
           public void onNext(ComputeAverageResponse value) {
-            System.out.printf("average of %s is %.4f%n", Arrays.toString(values), value.getAverage());
+            System.out.printf("average of %s is %.4f%n", "0 to 9999", value.getAverage());
           }
 
           @Override
@@ -42,12 +42,14 @@ public class ComputeAverageClient {
             System.out.println("FIN");
           }
         });
-    for(int i=0;i< values.length;i++){
-      requestObserver.onNext(ComputeAverageRequest.newBuilder().setNumber(values[i]).build());
+    Instant now = Instant.now();
+    for(int i=0;i<10000;i++){
+      requestObserver.onNext(ComputeAverageRequest.newBuilder().setNumber(i).build());
     }
     requestObserver.onCompleted();
     latch.await();
-
+    long diff = Instant.now().toEpochMilli() - now.toEpochMilli();
+    System.out.printf("took [%d]ms%n",diff);
     System.out.println("Shutting down channel");
     channel.shutdown();
   }
