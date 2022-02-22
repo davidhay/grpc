@@ -1,4 +1,4 @@
-package com.ealanta.grpc.greeting.client;
+package com.ealanta.grpc.calculator.client;
 
 import com.proto.calculator.AdditionRequest;
 import com.proto.calculator.AdditionResponse;

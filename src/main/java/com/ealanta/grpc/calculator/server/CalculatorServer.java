@@ -1,4 +1,4 @@
-package com.ealanta.grpc.greeting.server;
+package com.ealanta.grpc.calculator.server;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
