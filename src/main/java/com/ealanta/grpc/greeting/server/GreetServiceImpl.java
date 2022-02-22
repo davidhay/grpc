@@ -8,9 +8,41 @@ import com.proto.greet.GreetRequest;
 import com.proto.greet.GreetResponse;
 import com.proto.greet.GreetServiceGrpc.GreetServiceImplBase;
 import com.proto.greet.Greeting;
+import com.proto.greet.LongGreetRequest;
+import com.proto.greet.LongGreetResponse;
 import io.grpc.stub.StreamObserver;
 
 public class GreetServiceImpl extends GreetServiceImplBase {
+
+  //you return how the handler returns to a stream
+  @Override
+  public StreamObserver<LongGreetRequest> longGreet(
+      StreamObserver<LongGreetResponse> responseObserver) {
+
+    StreamObserver<LongGreetRequest> handler = new StreamObserver<LongGreetRequest>() {
+
+      String buffer = "";
+
+      @Override
+      public void onNext(LongGreetRequest value) {
+        buffer += String.format("Hello [%s]%n",value.getGreeting().getFirstName());
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        t.printStackTrace(System.err);
+        responseObserver.onError(t);
+      }
+
+      @Override
+      public void onCompleted() {
+            LongGreetResponse response = LongGreetResponse.newBuilder().setResult(buffer).build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+      }
+    };
+    return handler;
+  }
 
   @Override
   public void greet(GreetRequest request, StreamObserver<GreetResponse> responseObserver) {
