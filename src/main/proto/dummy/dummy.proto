@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package dummy; //this is proto package
+
+option java_package = "com.proto.dummy";
+option java_multiple_files = true;
+
+message DummyMessage {
+
+}
+
+service DummyService {
+
+}
