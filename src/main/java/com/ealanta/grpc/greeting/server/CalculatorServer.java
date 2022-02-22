@@ -4,13 +4,12 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import java.io.IOException;
 
-public class GreetingServer {
+public class CalculatorServer {
 
   public static void main(String[] args) throws IOException, InterruptedException {
     System.out.println("Hello gRPC");
 
-    Server server = ServerBuilder.forPort(50051)
-        .addService(new GreetServiceImpl())
+    Server server = ServerBuilder.forPort(50052)
         .addService(new CalculatorServiceImpl())
         .build();
 
