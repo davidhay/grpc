@@ -8,9 +8,29 @@ import com.proto.calculator.ComputeAverageRequest;
 import com.proto.calculator.ComputeAverageResponse;
 import com.proto.calculator.FindMaximumRequest;
 import com.proto.calculator.FindMaximumResponse;
+import com.proto.calculator.SquareRootRequest;
+import com.proto.calculator.SquareRootResponse;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 
 public class CalculatorServiceImpl extends CalculatorServiceImplBase {
+
+  @Override
+  public void squareRoot(SquareRootRequest request,
+      StreamObserver<SquareRootResponse> responseObserver) {
+    int input = request.getInput();
+    if(input < 0){
+      responseObserver.onError(
+          Status.INVALID_ARGUMENT
+              .withDescription("The input cannot be negative.")
+              .augmentDescription(String.format("invalid input[%d]",input))
+              .asRuntimeException());
+    } else {
+        double root = Math.sqrt(input);
+        responseObserver.onNext(SquareRootResponse.newBuilder().setSquareRoot(root).build());
+        responseObserver.onCompleted();
+    }
+  }
 
   @Override
   public StreamObserver<FindMaximumRequest> findMaximum(
