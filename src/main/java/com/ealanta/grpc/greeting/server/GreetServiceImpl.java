@@ -9,12 +9,39 @@ import com.proto.greet.GreetManyTimesResponse;
 import com.proto.greet.GreetRequest;
 import com.proto.greet.GreetResponse;
 import com.proto.greet.GreetServiceGrpc.GreetServiceImplBase;
+import com.proto.greet.GreetWithDeadlineRequest;
+import com.proto.greet.GreetWithDeadlineResponse;
 import com.proto.greet.Greeting;
 import com.proto.greet.LongGreetRequest;
 import com.proto.greet.LongGreetResponse;
+import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 
 public class GreetServiceImpl extends GreetServiceImplBase {
+
+  @Override
+  public void greetWithDeadline(GreetWithDeadlineRequest request,
+      StreamObserver<GreetWithDeadlineResponse> responseObserver) {
+
+      Context current = Context.current();
+
+      try {
+        for (int i = 0; i < 3; i++) {
+          if(!current.isCancelled()){
+            System.out.printf("Sleeping for 100ms[%d]%n",i);
+            Thread.sleep(100);
+          } else {
+            System.out.println("Client has Cancelled");
+            return; //no need to do anything - client has cancelled!
+          }
+        }
+      }catch(InterruptedException ex){
+        ex.printStackTrace();
+      }
+      String response = "Hello " + request.getGreeting().getFirstName() + "!";
+      responseObserver.onNext(GreetWithDeadlineResponse.newBuilder().setResult(response).build());
+      responseObserver.onCompleted();
+  }
 
   @Override
   public StreamObserver<GreetEveryoneRequest> greetEveryone(
@@ -52,7 +79,7 @@ public class GreetServiceImpl extends GreetServiceImplBase {
   public StreamObserver<LongGreetRequest> longGreet(
       StreamObserver<LongGreetResponse> responseObserver) {
 
-    StreamObserver<LongGreetRequest> handler = new StreamObserver<LongGreetRequest>() {
+    return new StreamObserver<LongGreetRequest>() {
 
       String buffer = "";
 
@@ -74,7 +101,6 @@ public class GreetServiceImpl extends GreetServiceImplBase {
             responseObserver.onCompleted();
       }
     };
-    return handler;
   }
 
   @Override
