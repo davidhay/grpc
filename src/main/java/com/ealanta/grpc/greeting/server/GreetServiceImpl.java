@@ -2,6 +2,8 @@ package com.ealanta.grpc.greeting.server;
 
 //a generated file
 
+import com.proto.greet.GreetEveryoneRequest;
+import com.proto.greet.GreetEveryoneResponse;
 import com.proto.greet.GreetManyTimesRequest;
 import com.proto.greet.GreetManyTimesResponse;
 import com.proto.greet.GreetRequest;
@@ -14,7 +16,38 @@ import io.grpc.stub.StreamObserver;
 
 public class GreetServiceImpl extends GreetServiceImplBase {
 
+  @Override
+  public StreamObserver<GreetEveryoneRequest> greetEveryone(
+      StreamObserver<GreetEveryoneResponse> responseObserver) {
+
+    return new StreamObserver<GreetEveryoneRequest>() {
+
+      @Override
+      public void onNext(GreetEveryoneRequest value) {
+        Greeting greeting = value.getGreeting();
+        String first = greeting.getFirstName();
+        String last = greeting.getLastName();
+
+        String result = String.format("Hello %s %s!",first,last);
+        GreetEveryoneResponse resp = GreetEveryoneResponse.newBuilder().setResult(result).build();
+        responseObserver.onNext(resp);
+      }
+
+      @Override
+      public void onError(Throwable t) {
+        t.printStackTrace(System.err);
+        responseObserver.onError(new Exception("exception when reading",t));
+      }
+
+      @Override
+      public void onCompleted() {
+          responseObserver.onCompleted();
+      }
+    };
+  }
+
   //you return how the handler returns to a stream
+
   @Override
   public StreamObserver<LongGreetRequest> longGreet(
       StreamObserver<LongGreetResponse> responseObserver) {

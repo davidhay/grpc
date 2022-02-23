@@ -1,6 +1,5 @@
 package com.ealanta.grpc.greeting.server;
 
-import com.ealanta.grpc.calculator.server.CalculatorServiceImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import java.io.IOException;
