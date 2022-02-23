@@ -20,9 +20,16 @@ message ComputeAverageRequest {
 message ComputeAverageResponse {
   double average = 1;
 }
+message FindMaximumRequest {
+  int32 number = 1;
+}
+message FindMaximumResponse {
+  int32 current_maximum = 1;
+}
 
 service CalculatorService {
   //Unary
   rpc Add(AdditionRequest) returns (AdditionResponse) {};
   rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse) {};
+  rpc FindMaximum(stream FindMaximumRequest) returns (stream FindMaximumResponse) {};
 }
