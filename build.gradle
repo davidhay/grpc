@@ -28,9 +28,16 @@ protobuf {
 }
 
 dependencies {
+    implementation "io.grpc:grpc-services:1.44.1"
     implementation 'io.grpc:grpc-netty-shaded:1.44.1' //shaded: includes SSL/TLS libraries
     implementation 'io.grpc:grpc-protobuf:1.44.1'
     implementation 'io.grpc:grpc-stub:1.44.1'
+
+    // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
+    implementation 'org.mongodb:mongodb-driver-sync:4.5.0'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    testImplementation 'org.slf4j:slf4j-simple:1.7.36'
+
     //compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
